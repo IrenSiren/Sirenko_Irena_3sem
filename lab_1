@@ -1,0 +1,160 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+ 
+// Hash table size
+//#define  table_size 13
+ 
+//  hash function.
+//#define prime_1 7
+//#define prime_2 5
+//#define alpha 2
+
+class DoubleHash
+{
+  private:
+      //pointer to the list  
+      vector <int> Hashtab;
+      //current size 
+      int c_size;
+      int table_size;
+      int prime_1;
+      int prime_2;
+      int alpha;
+ 
+  public:
+  //create our hash table 
+    DoubleHash()
+    {
+        c_size = 0;
+        Hashtab.resize(table_size, 0);
+    }
+//check if table is full
+    bool fullness()
+    {
+        return (c_size == table_size );
+    }
+ 
+  
+    int hash1(int hash)
+    {
+        return ( (prime_1*hash) % table_size);
+    }
+ 
+    int hash2(int hash)
+    {
+        return ((prime_2*hash + alpha) % table_size);
+    }
+
+    void reHash(vector<int> Hashtab)
+    {
+      int* M;
+      M = new int [Hashtab.size()];
+      for (int k = 0; k < Hashtab.size(); k++)
+      {
+        M[k] = Hashtab[k];
+        Hashtab[k] = 0;
+      }
+      for (int k = 0; k < Hashtab.size(); k++)
+      {
+          int hash;
+          M[k] = hash;
+          // get index from first hash
+          int index = hash1(hash);
+          // if collision 
+          if (Hashtab[index] != 0)
+          {
+              // get index2 from second hash
+              int index2 = hash2(hash);
+              int i = 1;
+              while (1)
+              {
+                  int new_index = (index + i * index2) % table_size;
+                  if (Hashtab[new_index] == 0)
+                  {
+                      Hashtab[new_index] = hash;
+                      break;
+                  }
+                  i++;
+              }
+          }
+          // if no collision 
+          else
+          {
+            Hashtab[index] = hash;
+          }
+      };
+
+    };
+ 
+    // function to insert key into hash table
+    void insertHash(int hash)
+    {
+        if (fullness())
+        {
+          Hashtab.resize(table_size + 1);
+          Hashtab[table_size] = hash;
+          reHash(Hashtab);
+        }
+        else
+        {
+            // get index from first hash
+            int index = hash1(hash);
+            // if collision 
+            if (Hashtab[index] != 0)
+            {
+                // get index2 from second hash
+                int index2 = hash2(hash);
+                int i = 1;
+                while (1)
+                {
+                    int new_index = (index + i * index2) % table_size;
+                    if (Hashtab[new_index] == 0)
+                    {
+                        Hashtab[new_index] = hash;
+                        break;
+                    }
+                    i++;
+                }
+            }
+            // if no collision 
+            else
+                Hashtab[index] = hash;
+            c_size++;
+        }
+    }
+
+
+    int find_value(int value)
+    {
+      for (int i  = 0; i < Hashtab.size(); i++)
+      {
+        if (Hashtab[i] == value)
+        {
+          return i;
+        }
+
+      }
+
+    }
+  
+  
+    void del_value(int value)
+    {
+      for (int i  = 0; i < Hashtab.size(); i++)
+      {
+        if (Hashtab[i] == value)
+        {
+          Hashtab[i] = 0;   
+        }
+      }
+
+    }
+ 
+    
+};
+ 
+
+int main() {
+  std::cout << "Hello World!\n";
+}
