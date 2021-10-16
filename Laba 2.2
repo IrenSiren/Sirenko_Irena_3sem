@@ -1,0 +1,166 @@
+#include <iostream>
+#include <cassert>
+using namespace std; 
+
+template <typename T>
+class Grid {
+private:
+    T *memory;
+    size_t x_size, y_size;
+public:
+    Grid(size_t x_size, size_t y_size): x_size(x_size), y_size(y_size)
+    {
+      if (x_size >0 and y_size>0)
+      {
+      memory = new T [x_size * y_size];
+      }
+      else
+      {
+        cout<< "sorry";
+      }
+    };
+    // Grid& operator= (const Grid& g) = delete;
+
+    Grid (Grid&& g_other): memory(g_other.memory), x_size(g_other.x_size), y_size(g_other.y_size)
+  {
+    cout<< "Transfer";
+    g_other.memory = nullptr;
+    g_other.x_size = 0;
+    g_other.y_size = 0;
+   } //tranfer construct
+
+  Grid (Grid& g_other): x_size(g_other.x_size), y_size(g_other.y_size)
+  {
+    cout<< "Copy";
+    memory = new T[x_size * y_size]; 
+    for (size_t i = 0; i < this->x_size * y_size; i++)
+    {
+    this->memory[i] = g_other.memory[i];
+    }
+    return *this; 
+   } //copy construct
+T operator()(size_t x_idx, size_t y_idx) const
+{
+  if (x_idx > x_size or y_idx > y_size )
+  {
+    cout<< "sorry";
+  }
+  else
+  {
+  return memory[y_idx * x_size + x_idx ];
+  }
+
+};
+
+T& operator()(size_t x_idx, size_t y_idx)
+{
+   if (x_idx > x_size or y_idx > y_size )
+  {
+    cout<< "sorry";
+  }
+  else
+  {
+    T & b = memory[y_idx * x_size + x_idx];
+    return b;
+  }
+};
+size_t get_xsize() const
+{
+  return x_size;
+
+};
+
+size_t get_ysize() const
+{
+  return y_size; 
+
+}
+
+Grid& operator=(T value)
+{
+  for (size_t i = 0; i< this->x_size*y_size; i++)
+  {
+    this->memory[i] = value;
+  }
+  return *this;
+
+};
+
+Grid& operator=(const Grid& g_other)
+	{
+		if (&g_other == this)
+			return *this;
+    cout << "Copy op" << endl;
+
+    assert((x_size = g_other.x_size) && (y_size = g_other.y_size) ); 
+    memory = new T[x_size*y_size];
+    for (size_t i = 0; i < this->x_size * y_size; i++)
+    {
+        this->memory[i] = g_other.memory[i];
+    }
+    return *this;
+    
+	}
+
+Grid& operator=(Grid&& g_other)
+	{
+    cout << "Trans op" << endl;
+		if (&g_other == this)
+			return *this;
+
+    assert((x_size = g_other.x_size) &&( y_size = g_other.y_size )); 
+    cout << "Trans op" << endl;
+    for(size_t i = 0; i < this->x_size * y_size; i++)
+    {
+    swap(memory[i], g_other.memory[i]);
+    }
+    return *this;
+  
+	}
+
+
+
+friend ostream& operator<<(ostream& out, Grid const& grid)
+{ 
+  for (size_t i = 0; i < grid.x_size * grid.y_size; i++)
+  {
+    out << grid.memory[i] << " ";
+  }
+  return out;
+};
+friend istream& operator>>(istream& in, Grid & grid)
+{
+  for (size_t i = 0; i < grid.x_size * grid.y_size; i++)
+  {
+    in >> grid.memory[i];
+  }
+  return in;
+
+};
+ ~Grid()
+ {
+   if (memory != nullptr)
+       delete[] memory;
+       memory = nullptr;
+
+ };
+};
+
+
+
+int main() {
+  Grid<int> grad(3,3);
+  Grid<int> grid(3,3);
+  grad = 5;
+  cout << grid << endl;
+   cout << grad << endl;
+  grid = move(grad);
+  cout << grid;
+
+
+
+
+
+
+
+}
