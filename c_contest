@@ -1,0 +1,208 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <map>
+#include <iterator>
+#include <algorithm>
+using namespace std;
+
+template<typename K, typename V>
+void print_map(map<K, V> const &m)
+{
+    for (auto const &pair: m) {
+        cout << "{" << pair.first << ": " << pair.second << "}\n";
+    }
+}
+void print(vector<int> const &input)
+{
+    for (int i = 0; i < input.size(); i++) 
+    {
+      cout << input.at(i) << "  ";
+    }
+}
+
+void fill_with_data_map(map<string, int> &input, int N)
+{
+  for(int i = 0; i < N; i++)
+  {
+    string s;
+    int flash;
+    cin>>s;
+    cin>>flash;
+    auto it = input.find(s);
+    if(input.count(s) == 1)
+    {
+      it->second = max(flash,it->second);
+    }
+    else
+    {
+
+      input.insert({s,flash});
+    }
+  }
+}
+
+map<int,int> change_to_int_map(map<string,int> &u_map)
+{
+  map<int,int> finall;
+  map<int,int> :: iterator its;
+  map<string,int> :: iterator it;
+  it = u_map.begin();
+
+
+  while (it != u_map.end())
+	{
+    int date;
+    string year;
+    string day;
+    string month;
+    year = it->first.substr(6, 4);
+    month = it->first.substr(3, 2);
+    day = it->first.substr(0, 2);
+    date = stoi(year)*10000 + stoi(month)*100 + stoi(day);
+    finall[date] = it->second;
+		it++; 
+
+	}
+  return finall;
+};
+
+
+
+void change_vector(vector<int> &vec, int M)
+{
+  for(int i = 0; i < M; i++)
+  { 
+    string st;
+    cin>>st;
+    int dat;
+    string year;
+    string day;
+    string month;
+    year = st.substr(6, 4);
+    month = st.substr(3, 2);
+    day = st.substr(0, 2);
+    dat = stoi(year)*10000 + stoi(month)*100 + stoi(day);
+    vec.push_back(dat);
+  }
+}
+
+
+int max_flashes_for_period(map<int,int> ur_map)
+{
+  map<int,int>:: iterator it;
+  int max_flash = 0 ;
+  it = ur_map.begin();
+  while(it != ur_map.end())
+  {
+    if (it->second > max_flash)
+    {
+      max_flash = it->second;
+
+    }
+    it++;
+
+  }
+  return max_flash;
+};
+
+
+
+int max_date_during_period(map<int,int> ur_map)
+{
+   map<int,int>:: iterator it;
+   int maximum = 0;
+   it = ur_map.begin();
+   while(it != ur_map.end())
+  {
+    if (it->first > maximum)
+    {
+      maximum = it->first;
+
+    }
+    it++;
+
+  }
+  return maximum;
+}
+
+
+
+int min_date_during_period(map<int,int> ur_map)
+{
+   map<int,int>:: iterator it;
+   int minimum = 90001332;
+   it = ur_map.begin();
+   while(it != ur_map.end())
+   {
+    if (it->first < minimum)
+    {
+      minimum = it->first;
+
+    }
+    it++;
+
+   }
+   return minimum;
+}
+
+
+vector<int> get_results (map<int, int> &input_int, vector<int> output_int, int M )
+{
+  vector<int> results ;
+  results.resize(M);
+  for(int i = 0; i < output_int.size(); i++)
+  {
+    int flag = 0;
+    for (auto it = input_int.begin(); it != input_int.end(); it++ ) 
+    {
+       if( output_int[i] == it->first)
+      {
+        results[i] = it->second;
+        flag = 1;
+      }; 
+    }
+    if(flag == 0)
+    {
+      int min_day = min_date_during_period(input_int);
+      int max_day = max_date_during_period(input_int);
+      if (output_int[i] < min_day)
+      {
+        results[i] = 0;
+      }
+      if(output_int[i] > max_day)
+      {
+         results[i] = max_flashes_for_period(input_int);
+      }
+      if((min_day <= output_int[i]) && (output_int[i] <= max_day ))
+      {
+        results[i] = 0;
+      }
+    }
+  
+  }
+  return results;
+
+}
+
+int main() 
+{
+  int N;
+  cin>>N;
+  map<string, int> input;
+  fill_with_data_map(input, N);
+  map<int, int> input_int;
+  input_int = change_to_int_map(input);
+  print_map(input_int);
+  
+
+  int M;
+  cin>>M;
+  vector<int> output_int;
+  change_vector(output_int, M);
+  print(output_int);
+  vector<int> res;
+  res = get_results(input_int, output_int, M);
+  print(res);
+
+}
