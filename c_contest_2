@@ -1,0 +1,71 @@
+#include <iostream>
+#include <map>
+#include <set>
+#include <algorithm>
+#include <string>
+#include <vector>
+#include <iterator>
+using namespace std;
+ 
+ 
+ 
+int main()
+{
+  int N, flashes, dt;
+  int m = 0;
+  map <int, int> data;
+  cin >> N;
+  for(int i = 0; i < N; i++)
+  {
+    string data_string;
+    cin >> data_string >> flashes;
+    dt = stoi(data_string.substr(0,2).c_str()) + stoi(data_string.substr(3,2).c_str()) * 100 + stoi(data_string.substr(6,4).c_str()) * 10000;
+    if(data.find(dt) != data.end())
+    {
+      data[dt] = max(data[dt], flashes);
+    }
+    else
+    {
+      data[dt] = flashes;
+    }
+  }
+
+ 
+  for(auto it = data.begin(); it != data.end(); it++)
+  {
+    if(it->second > m)
+    {
+      m = it->second;
+    }
+    else 
+    {
+      it->second = m;
+    }
+  }
+
+  int M;
+  cin >> M;
+  for(int i = 0; i < m; i++)
+  {
+    string data_string;
+    cin >> data_string;
+    dt = stoi(data_string.substr(0,2).c_str()) + stoi(data_string.substr(3,2).c_str()) * 100 + stoi(data_string.substr(6,4).c_str()) * 10000;
+    auto it = data.lower_bound(dt);
+    if(it == data.end())
+    {
+       cout << m << endl;
+    }
+    else if(it->first == dt)
+    { 
+      cout << it->second << endl;
+    }
+    else if(it == data.begin())
+    {
+       cout << 0 << endl;
+    }
+    else
+    { 
+      cout <<(--it)->second << endl;
+    }
+  }
+}
