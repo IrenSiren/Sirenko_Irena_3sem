@@ -1,0 +1,55 @@
+#include <iostream>
+using namespace std;
+
+class Matrix
+{
+    public:
+        void set_col(unsigned int n_columns)
+        {
+          columns = n_columns;
+        }
+        void set_row(unsigned int  n_rows)
+        {
+          rows = n_rows;
+        }
+
+        void set_el (int i_row, int j_col, int valu)
+        {
+          int **M = new int* [rows]; //строк
+          for (int i = 0; i < rows ; i++)
+          {
+              M[i] = new int [columns]; // столбцов
+          }
+          M[i_row][j_col]; 
+        }
+
+        Matrix(unsigned int n_columns,unsigned int n_rows)
+        {
+          columns = n_columns;
+          rows = n_rows;
+          int **M = new int* [n_rows]; //строк
+          for (int i = 0; i < n_rows ; i++)
+          {
+              M[i] = new int [n_columns]; // столбцов
+          }
+          //заполним нулями 
+
+          for (int i = 0; i < n_rows; i++)
+           {
+                for (int j = 0; j < n_columns; j++)
+                {
+                  M[i][j] = 0;
+                }
+                
+           }
+        }
+
+    private:
+        int columns;
+        int rows;
+};
+
+
+int main() {
+
+}
