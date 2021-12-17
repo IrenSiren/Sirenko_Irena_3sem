@@ -1,0 +1,55 @@
+#include <iostream>
+
+
+class Graph 
+{
+  private:
+    int n;
+    int **M_graph;
+  public:
+
+  Graph(unsigned int n_inputed)
+  {
+    n = n_inputed;
+    int **M_graph = new int* [n]; //строк
+        for (int i = 0; i < n ; i++)
+        {
+            M_graph[i] = new int [n]; // столбцов
+        };
+    //заполним нулями 
+
+    for (int i = 0; i < n; i++)
+      {
+          for (int j = 0; j < n; j++)
+          {
+            M_graph[i][j] = 0;
+          };     
+      };
+  };
+
+  void set_matrix (int i, int j, int value)
+  {
+    M_graph[i][j] = value;
+  };
+
+  int** get_matrix()
+  {
+    return M_graph;
+
+  };
+
+};
+
+class Visiter
+ {
+    public:
+    private:
+    Graph g;
+
+};
+
+
+int main() 
+{
+
+}
